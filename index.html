@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KBYD Live Poll — Know Before You Dig</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Georgia&family=Inter:wght@400;500;600;700&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; background:#FFFFFF; color:#1E3A5F; min-height:100vh; }
+  .stripe { height:6px; background:repeating-linear-gradient(90deg,#E94F1A 0,#E94F1A 25px,#1A1A1A 25px,#1A1A1A 50px); }
+  .container { max-width:440px; margin:0 auto; padding:20px 16px; }
+  .header { text-align:center; margin-bottom:24px; }
+  .header img { height:36px; margin-bottom:8px; }
+  .header h1 { font-family:Georgia,serif; font-size:20px; color:#1E3A5F; }
+  .header p { font-size:13px; color:#5A7088; margin-top:4px; }
+  .badge { display:inline-block; background:#E94F1A; color:#fff; font-size:11px; font-weight:700; padding:4px 14px; border-radius:3px; letter-spacing:2px; margin-bottom:12px; }
+  .question-text { font-family:Georgia,serif; font-size:18px; color:#1E3A5F; line-height:1.4; margin-bottom:20px; text-align:center; }
+  .option-btn { display:block; width:100%; padding:14px 16px; margin-bottom:10px; background:#1E3A5F; color:#fff; border:none; border-radius:6px; font-size:15px; font-family:'Inter',sans-serif; cursor:pointer; text-align:left; transition:all 0.2s; border-left:4px solid #E94F1A; }
+  .option-btn:hover { background:#253D5C; transform:translateY(-1px); }
+  .option-btn:active { transform:scale(0.98); }
+  .option-btn.voted { background:#E94F1A; color:#fff; border-left-color:#1A1A1A; }
+  .option-btn.disabled { opacity:0.6; pointer-events:none; }
+  .option-letter { font-weight:700; color:#E94F1A; margin-right:10px; font-size:16px; }
+  .option-btn.voted .option-letter { color:#fff; }
+  .status { text-align:center; padding:40px 20px; }
+  .status h2 { font-family:Georgia,serif; font-size:22px; color:#1E3A5F; margin-bottom:8px; }
+  .status p { color:#5A7088; font-size:14px; }
+  .waiting-pulse { display:inline-block; width:12px; height:12px; background:#E94F1A; border-radius:50%; animation:pulse 1.5s infinite; margin-right:8px; vertical-align:middle; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  .voted-msg { text-align:center; padding:24px; background:#f0faf0; border-radius:8px; margin-top:16px; }
+  .voted-msg h3 { color:#1E3A5F; font-size:16px; margin-bottom:4px; }
+  .voted-msg p { color:#5A7088; font-size:13px; }
+  .check-icon { font-size:32px; margin-bottom:8px; }
+  .footer { text-align:center; margin-top:32px; padding-top:16px; border-top:1px solid #eee; }
+  .footer p { font-size:11px; color:#999; }
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<div class="container">
+  <div class="header">
+    <h1>KNOW BEFORE YOU DIG</h1>
+    <p>Talanoa Evening Live Poll</p>
+  </div>
+  <div id="app">
+    <div class="status">
+      <div class="waiting-pulse"></div>
+      <h2>Connecting...</h2>
+      <p>Waiting for the presenter</p>
+    </div>
+  </div>
+  <div class="footer">
+    <p>Kahuto Pacific &bull; Moana Data Services</p>
+  </div>
+</div>
+<div class="stripe"></div>
+
+<script>
+// ===== CONFIGURATION =====
+const API_BASE = "https://empty-forest-4519.nikhil-singh3168.workers.dev"; // UPDATE THIS
+const POLL_INTERVAL = 2000; // check every 2 seconds
+
+// Unique audience ID (persists in session)
+let odientId = sessionStorage.getItem("kbyd_id");
+if (!odientId) {
+  odientId = "u_" + Math.random().toString(36).substr(2, 9);
+  sessionStorage.setItem("kbyd_id", odientId);
+}
+
+const app = document.getElementById("app");
+let currentQuestionId = 0;
+let hasVoted = {};
+
+async function checkActive() {
+  try {
+    const res = await fetch(API_BASE + "/api/active");
+    const data = await res.json();
+
+    if (!data.question || data.questionId === 0) {
+      app.innerHTML = `
+        <div class="status">
+          <div class="waiting-pulse"></div>
+          <h2>Waiting for next question...</h2>
+          <p>The presenter will activate the poll shortly</p>
+        </div>`;
+      currentQuestionId = 0;
+      return;
+    }
+
+    if (data.questionId !== currentQuestionId) {
+      currentQuestionId = data.questionId;
+      renderQuestion(data.question);
+    }
+  } catch (e) {
+    console.error("Poll check failed:", e);
+  }
+}
+
+function renderQuestion(q) {
+  if (hasVoted[q.id]) {
+    showVoted(q);
+    return;
+  }
+
+  const optionsHtml = q.options.map((opt, i) => {
+    const letter = String.fromCharCode(65 + i);
+    return `<button class="option-btn" onclick="vote(${q.id}, ${i}, this)">
+      <span class="option-letter">${letter}</span>${opt}
+    </button>`;
+  }).join("");
+
+  app.innerHTML = `
+    <div class="badge">LIVE POLL</div>
+    <div class="question-text">${q.question}</div>
+    <div id="options">${optionsHtml}</div>`;
+}
+
+async function vote(questionId, optionIndex, btn) {
+  // Disable all buttons
+  document.querySelectorAll(".option-btn").forEach(b => {
+    b.classList.add("disabled");
+  });
+  btn.classList.add("voted");
+  btn.classList.remove("disabled");
+
+  try {
+    const res = await fetch(API_BASE + "/api/vote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ questionId, optionIndex, odientId })
+    });
+    const data = await res.json();
+
+    if (data.ok || data.alreadyVoted) {
+      hasVoted[questionId] = true;
+      setTimeout(() => {
+        showVoted({ id: questionId, options: [] });
+      }, 600);
+    }
+  } catch (e) {
+    console.error("Vote failed:", e);
+    // Re-enable buttons on error
+    document.querySelectorAll(".option-btn").forEach(b => {
+      b.classList.remove("disabled", "voted");
+    });
+  }
+}
+
+function showVoted(q) {
+  app.innerHTML = `
+    <div class="voted-msg">
+      <div class="check-icon">&#10003;</div>
+      <h3>Vote recorded!</h3>
+      <p>Waiting for results on the big screen...</p>
+    </div>`;
+}
+
+// Poll every 2 seconds
+checkActive();
+setInterval(checkActive, POLL_INTERVAL);
+</script>
+</body>
+</html>
