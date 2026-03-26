@@ -3,37 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KBYD Live Poll — Know Before You Dig</title>
+<title>KBYD Live Poll</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Georgia&family=Inter:wght@400;500;600;700&display=swap');
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Inter',sans-serif; background:#FFFFFF; color:#1E3A5F; min-height:100vh; }
-  .stripe { height:6px; background:repeating-linear-gradient(90deg,#E94F1A 0,#E94F1A 25px,#1A1A1A 25px,#1A1A1A 50px); }
-  .container { max-width:440px; margin:0 auto; padding:20px 16px; }
-  .header { text-align:center; margin-bottom:24px; }
-  .header img { height:36px; margin-bottom:8px; }
-  .header h1 { font-family:Georgia,serif; font-size:20px; color:#1E3A5F; }
-  .header p { font-size:13px; color:#5A7088; margin-top:4px; }
-  .badge { display:inline-block; background:#E94F1A; color:#fff; font-size:11px; font-weight:700; padding:4px 14px; border-radius:3px; letter-spacing:2px; margin-bottom:12px; }
-  .question-text { font-family:Georgia,serif; font-size:18px; color:#1E3A5F; line-height:1.4; margin-bottom:20px; text-align:center; }
-  .option-btn { display:block; width:100%; padding:14px 16px; margin-bottom:10px; background:#1E3A5F; color:#fff; border:none; border-radius:6px; font-size:15px; font-family:'Inter',sans-serif; cursor:pointer; text-align:left; transition:all 0.2s; border-left:4px solid #E94F1A; }
-  .option-btn:hover { background:#253D5C; transform:translateY(-1px); }
-  .option-btn:active { transform:scale(0.98); }
-  .option-btn.voted { background:#E94F1A; color:#fff; border-left-color:#1A1A1A; }
-  .option-btn.disabled { opacity:0.6; pointer-events:none; }
-  .option-letter { font-weight:700; color:#E94F1A; margin-right:10px; font-size:16px; }
-  .option-btn.voted .option-letter { color:#fff; }
-  .status { text-align:center; padding:40px 20px; }
-  .status h2 { font-family:Georgia,serif; font-size:22px; color:#1E3A5F; margin-bottom:8px; }
-  .status p { color:#5A7088; font-size:14px; }
-  .waiting-pulse { display:inline-block; width:12px; height:12px; background:#E94F1A; border-radius:50%; animation:pulse 1.5s infinite; margin-right:8px; vertical-align:middle; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-  .voted-msg { text-align:center; padding:24px; background:#f0faf0; border-radius:8px; margin-top:16px; }
-  .voted-msg h3 { color:#1E3A5F; font-size:16px; margin-bottom:4px; }
-  .voted-msg p { color:#5A7088; font-size:13px; }
-  .check-icon { font-size:32px; margin-bottom:8px; }
-  .footer { text-align:center; margin-top:32px; padding-top:16px; border-top:1px solid #eee; }
-  .footer p { font-size:11px; color:#999; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:#fff;color:#1E3A5F;min-height:100vh}
+  .stripe{height:6px;background:repeating-linear-gradient(90deg,#E94F1A 0,#E94F1A 25px,#1A1A1A 25px,#1A1A1A 50px);position:fixed;top:0;left:0;right:0;z-index:10}
+  .container{max-width:440px;margin:0 auto;padding:16px 16px 80px;margin-top:6px}
+  .header{text-align:center;margin-bottom:16px;padding-top:8px}
+  .header h1{font-family:Georgia,serif;font-size:18px;color:#1E3A5F}
+  .header p{font-size:12px;color:#5A7088;margin-top:4px}
+  .progress{display:flex;gap:6px;margin-bottom:16px;justify-content:center}
+  .progress-dot{width:36px;height:4px;border-radius:2px;background:#F0F0F0;transition:background 0.3s}
+  .progress-dot.done{background:#E94F1A}
+  .q-card{background:#fff;margin-bottom:14px;padding:14px;border-radius:8px;border:1px solid #eee}
+  .q-card.completed{opacity:0.5}
+  .q-num{display:inline-block;background:#E94F1A;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:3px;letter-spacing:1px;margin-bottom:6px}
+  .q-text{font-family:Georgia,serif;font-size:15px;color:#1E3A5F;line-height:1.4;margin-bottom:10px}
+  .option-btn{display:block;width:100%;padding:11px 12px;margin-bottom:7px;background:#1E3A5F;color:#fff;border:none;border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;text-align:left;transition:all 0.2s;border-left:4px solid #E94F1A}
+  .option-btn:hover{background:#253D5C}
+  .option-btn:active{transform:scale(0.98)}
+  .option-btn.voted{background:#E94F1A;border-left-color:#1A1A1A}
+  .option-btn.disabled{opacity:0.5;pointer-events:none}
+  .option-letter{font-weight:700;color:#E94F1A;margin-right:8px}
+  .option-btn.voted .option-letter{color:#fff}
+  .done-banner{text-align:center;padding:24px;background:#f0faf0;border-radius:8px;margin-top:16px}
+  .done-banner h3{color:#1E3A5F;font-size:18px;margin-bottom:4px}
+  .done-banner p{color:#5A7088;font-size:13px}
+  .footer{text-align:center;padding:16px}
+  .footer p{font-size:11px;color:#999}
 </style>
 </head>
 <body>
@@ -41,124 +39,55 @@
 <div class="container">
   <div class="header">
     <h1>KNOW BEFORE YOU DIG</h1>
-    <p>Talanoa Evening Live Poll</p>
+    <p>Talanoa Evening — Answer all 5 questions</p>
   </div>
-  <div id="app">
-    <div class="status">
-      <div class="waiting-pulse"></div>
-      <h2>Connecting...</h2>
-      <p>Waiting for the presenter</p>
-    </div>
-  </div>
-  <div class="footer">
-    <p>Kahuto Pacific &bull; Moana Data Services</p>
-  </div>
+  <div class="progress" id="progress"></div>
+  <div id="app"></div>
+  <div class="footer"><p>Kahuto Pacific &bull; Moana Data Services</p></div>
 </div>
-<div class="stripe"></div>
 
 <script>
-// ===== CONFIGURATION =====
-const API_BASE = "https://empty-forest-4519.nikhil-singh3168.workers.dev"; // UPDATE THIS
-const POLL_INTERVAL = 2000; // check every 2 seconds
+const API_BASE="https://empty-forest-4519.nikhil-singh3168.workers.dev";
+const QUESTIONS=[
+  {id:1,question:"Before today, did you know what utilities are under your project site?",options:["Yes — I had full visibility","Partially — some records available","No — it was a complete unknown","Not sure"]},
+  {id:2,question:"Has your project ever been delayed by an unexpected utility strike?",options:["Yes — it happened to us","No — but I've heard of cases","No — never encountered it"]},
+  {id:3,question:"Had you heard of Ground Penetrating Radar (GPR) before tonight?",options:["Yes — I know what it is","Heard the name, not sure what it does","No — first time hearing about it"]},
+  {id:4,question:"What quality level do you think most Fiji projects currently operate at?",options:["QL-D — Existing records only","QL-C — Surface features & marking","QL-B — GPR / EM detection","Don't know"]},
+  {id:5,question:"Would you use a pre-dig notification service if it existed in Fiji?",options:["Absolutely — sign me up","Maybe — need more info","Not relevant to my work"]}
+];
+let odientId=sessionStorage.getItem("kbyd_id");
+if(!odientId){odientId="u_"+Math.random().toString(36).substr(2,9);sessionStorage.setItem("kbyd_id",odientId)}
+let voted=JSON.parse(sessionStorage.getItem("kbyd_voted")||"{}");
+const app=document.getElementById("app"),progress=document.getElementById("progress");
 
-// Unique audience ID (persists in session)
-let odientId = sessionStorage.getItem("kbyd_id");
-if (!odientId) {
-  odientId = "u_" + Math.random().toString(36).substr(2, 9);
-  sessionStorage.setItem("kbyd_id", odientId);
-}
-
-const app = document.getElementById("app");
-let currentQuestionId = 0;
-let hasVoted = {};
-
-async function checkActive() {
-  try {
-    const res = await fetch(API_BASE + "/api/active");
-    const data = await res.json();
-
-    if (!data.question || data.questionId === 0) {
-      app.innerHTML = `
-        <div class="status">
-          <div class="waiting-pulse"></div>
-          <h2>Waiting for next question...</h2>
-          <p>The presenter will activate the poll shortly</p>
-        </div>`;
-      currentQuestionId = 0;
-      return;
-    }
-
-    if (data.questionId !== currentQuestionId) {
-      currentQuestionId = data.questionId;
-      renderQuestion(data.question);
-    }
-  } catch (e) {
-    console.error("Poll check failed:", e);
-  }
-}
-
-function renderQuestion(q) {
-  if (hasVoted[q.id]) {
-    showVoted(q);
+function render(){
+  progress.innerHTML=QUESTIONS.map(q=>`<div class="progress-dot ${voted[q.id]!==undefined?'done':''}"></div>`).join("");
+  if(QUESTIONS.every(q=>voted[q.id]!==undefined)){
+    app.innerHTML=`<div class="done-banner"><div style="font-size:36px;margin-bottom:8px">&#10003;</div><h3>All done — thanks!</h3><p>Watch the big screen for live results!</p></div>`;
     return;
   }
-
-  const optionsHtml = q.options.map((opt, i) => {
-    const letter = String.fromCharCode(65 + i);
-    return `<button class="option-btn" onclick="vote(${q.id}, ${i}, this)">
-      <span class="option-letter">${letter}</span>${opt}
-    </button>`;
+  app.innerHTML=QUESTIONS.map(q=>{
+    const done=voted[q.id]!==undefined;
+    if(done) return `<div class="q-card completed"><div class="q-num">Q${q.id}</div><div class="q-text">${q.question}</div><div style="text-align:center;color:#5A7088;font-size:13px;padding:4px">&#10003; Answered</div></div>`;
+    const opts=q.options.map((o,i)=>{
+      const L=String.fromCharCode(65+i);
+      return `<button class="option-btn" onclick="vote(${q.id},${i},this)"><span class="option-letter">${L}</span>${o}</button>`;
+    }).join("");
+    return `<div class="q-card"><div class="q-num">Q${q.id}</div><div class="q-text">${q.question}</div>${opts}</div>`;
   }).join("");
-
-  app.innerHTML = `
-    <div class="badge">LIVE POLL</div>
-    <div class="question-text">${q.question}</div>
-    <div id="options">${optionsHtml}</div>`;
 }
 
-async function vote(questionId, optionIndex, btn) {
-  // Disable all buttons
-  document.querySelectorAll(".option-btn").forEach(b => {
-    b.classList.add("disabled");
-  });
-  btn.classList.add("voted");
-  btn.classList.remove("disabled");
-
-  try {
-    const res = await fetch(API_BASE + "/api/vote", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ questionId, optionIndex, odientId })
-    });
-    const data = await res.json();
-
-    if (data.ok || data.alreadyVoted) {
-      hasVoted[questionId] = true;
-      setTimeout(() => {
-        showVoted({ id: questionId, options: [] });
-      }, 600);
-    }
-  } catch (e) {
-    console.error("Vote failed:", e);
-    // Re-enable buttons on error
-    document.querySelectorAll(".option-btn").forEach(b => {
-      b.classList.remove("disabled", "voted");
-    });
-  }
+async function vote(qId,optIdx,btn){
+  if(voted[qId]!==undefined)return;
+  btn.closest('.q-card').querySelectorAll('.option-btn').forEach(b=>b.classList.add('disabled'));
+  btn.classList.add('voted');btn.classList.remove('disabled');
+  try{
+    await fetch(API_BASE+"/api/vote",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({questionId:qId,optionIndex:optIdx,odientId})});
+    voted[qId]=optIdx;sessionStorage.setItem("kbyd_voted",JSON.stringify(voted));
+    setTimeout(()=>{render();const next=document.querySelector('.q-card:not(.completed)');if(next)next.scrollIntoView({behavior:'smooth',block:'center'})},400);
+  }catch(e){console.error(e);btn.closest('.q-card').querySelectorAll('.option-btn').forEach(b=>b.classList.remove('disabled'));btn.classList.remove('voted')}
 }
-
-function showVoted(q) {
-  app.innerHTML = `
-    <div class="voted-msg">
-      <div class="check-icon">&#10003;</div>
-      <h3>Vote recorded!</h3>
-      <p>Waiting for results on the big screen...</p>
-    </div>`;
-}
-
-// Poll every 2 seconds
-checkActive();
-setInterval(checkActive, POLL_INTERVAL);
+render();
 </script>
 </body>
 </html>
