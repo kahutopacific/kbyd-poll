@@ -7,47 +7,58 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Georgia&family=Inter:wght@400;500;600;700&display=swap');
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Inter',sans-serif;background:#fff;color:#1E3A5F;min-height:100vh;overflow-x:hidden}
-  .stripe{height:8px;background:repeating-linear-gradient(90deg,#E94F1A 0,#E94F1A 30px,#1A1A1A 30px,#1A1A1A 60px)}
-  .container{padding:16px 32px;max-width:1200px;margin:0 auto}
-  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  .badge{background:#E94F1A;color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:3px;letter-spacing:3px}
-  .total{font-size:13px;color:#5A7088}.total span{font-size:22px;font-weight:700;color:#E94F1A;vertical-align:middle;margin-right:4px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .q-block{background:#fff;border:1px solid #eee;border-radius:6px;padding:12px 14px}
-  .q-block.full-width{grid-column:1/3}
-  .q-label{font-size:10px;font-weight:700;color:#E94F1A;letter-spacing:1px;margin-bottom:4px}
-  .q-text{font-family:Georgia,serif;font-size:13px;color:#1E3A5F;margin-bottom:8px;line-height:1.3}
-  .r-row{margin-bottom:6px}
-  .r-top{display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px}
-  .r-opt{color:#1E3A5F;font-weight:500}.r-opt span{color:#E94F1A;font-weight:700;margin-right:4px}
-  .r-cnt{color:#5A7088}
-  .r-bar-bg{height:22px;background:#F0F0F0;border-radius:3px;overflow:hidden}
-  .r-bar{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.25,0.46,0.45,0.94);display:flex;align-items:center;padding-left:8px;background:#1E3A5F}
-  .r-bar .pct{color:#fff;font-weight:700;font-size:11px}
-  .r-bar.winner{background:#E94F1A}
-  .footer-bar{height:28px;background:#3A3A3A;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+  body{font-family:'Inter',sans-serif;background:#fff;color:#1E3A5F;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+  .stripe{height:8px;flex-shrink:0;background:repeating-linear-gradient(90deg,#E94F1A 0,#E94F1A 30px,#1A1A1A 30px,#1A1A1A 60px)}
+  .footer-bar{height:28px;flex-shrink:0;background:#3A3A3A;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
   .footer-bar span{font-size:9px;color:#5A7088;letter-spacing:2px}
-  .waiting{text-align:center;padding:60px 20px}
-  .waiting h2{font-family:Georgia,serif;font-size:24px;color:#1E3A5F;margin-bottom:8px}
-  .waiting p{color:#5A7088;font-size:14px}
+  .footer-bar a{font-size:9px;color:#D4600A;text-decoration:none;letter-spacing:1px}
+  .main{flex:1;display:flex;position:relative;overflow:hidden}
+  .left-accent{width:6px;background:#E94F1A;flex-shrink:0}
+  .content{flex:1;padding:18px 28px 12px 28px;display:flex;flex-direction:column}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .badge{background:#E94F1A;color:#fff;font-size:12px;font-weight:700;padding:5px 16px;border-radius:3px;letter-spacing:3px}
+  .participants{font-size:13px;color:#5A7088}
+  .participants span{font-size:20px;font-weight:700;color:#E94F1A;margin-right:3px}
+  .logo{position:absolute;top:14px;right:20px;height:36px}
+  .grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start}
+  .q-block{border:1px solid #eee;border-radius:6px;padding:10px 12px;border-left:4px solid #E94F1A}
+  .q-block.full-width{grid-column:1/3}
+  .q-label{font-size:10px;font-weight:700;color:#E94F1A;letter-spacing:1px;margin-bottom:3px}
+  .q-text{font-family:Georgia,serif;font-size:12px;color:#1E3A5F;margin-bottom:6px;line-height:1.3}
+  .r-row{margin-bottom:5px}
+  .r-top{display:flex;justify-content:space-between;font-size:10px;margin-bottom:1px}
+  .r-opt{color:#1E3A5F;font-weight:500}.r-opt b{color:#E94F1A;margin-right:3px}
+  .r-cnt{color:#5A7088}
+  .r-bar-bg{height:18px;background:#F0F0F0;border-radius:3px;overflow:hidden}
+  .r-bar{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.25,0.46,0.45,0.94);display:flex;align-items:center;padding-left:6px;background:#1E3A5F}
+  .r-bar .pct{color:#fff;font-weight:700;font-size:10px}
+  .r-bar.winner{background:#E94F1A}
+  .waiting{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .waiting h2{font-family:Georgia,serif;font-size:22px;color:#1E3A5F;margin-bottom:6px}
+  .waiting p{color:#5A7088;font-size:13px}
   .pulse{display:inline-block;width:10px;height:10px;background:#E94F1A;border-radius:50%;animation:pulse 1.5s infinite;margin-right:6px;vertical-align:middle}
   @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 </style>
 </head>
 <body>
 <div class="stripe"></div>
-<div class="container">
-  <div class="header">
-    <div class="badge">LIVE RESULTS</div>
-    <div class="total"><span id="total-num">0</span> total votes</div>
-  </div>
-  <div id="app">
-    <div class="waiting"><span class="pulse"></span><h2>Waiting for votes...</h2><p>Results appear automatically</p></div>
+<div class="main">
+  <div class="left-accent"></div>
+  <div class="content">
+    <img class="logo" src="https://kahutopacific.github.io/kbyd-poll/kahuto-logo.png" alt="" onerror="this.style.display='none'">
+    <div class="top">
+      <div class="badge">LIVE RESULTS</div>
+      <div class="participants"><span id="total-num">0</span> participants</div>
+    </div>
+    <div id="app">
+      <div class="waiting"><span class="pulse"></span><h2>Waiting for votes...</h2><p>Results appear automatically</p></div>
+    </div>
   </div>
 </div>
 <div class="stripe"></div>
-<div class="footer-bar"><span>MOANA DATA SERVICES | Kahuto Pacific</span><span>kahutopacific.com</span></div>
+<div class="footer-bar">
+  <span>Kahuto Pacific</span>
+</div>
 
 <script>
 const API_BASE="https://empty-forest-4519.nikhil-singh3168.workers.dev";
@@ -58,7 +69,6 @@ const QUESTIONS=[
   {id:4,question:"What quality level do most Fiji projects operate at?",options:["QL-D — Records only","QL-C — Surface features","QL-B — GPR / EM","Don't know"]},
   {id:5,question:"Would you use a pre-dig notification service in Fiji?",options:["Absolutely","Maybe — need more info","Not relevant"]}
 ];
-
 const app=document.getElementById("app");
 let built=false;
 
@@ -68,21 +78,21 @@ function buildUI(){
     const fw=i===4?"full-width":"";
     const bars=q.options.map((o,j)=>{
       const L=String.fromCharCode(65+j);
-      return `<div class="r-row"><div class="r-top"><span class="r-opt"><span>${L}</span>${o}</span><span class="r-cnt" id="c${q.id}-${j}">0</span></div><div class="r-bar-bg"><div class="r-bar" id="b${q.id}-${j}" style="width:0"><span class="pct" id="p${q.id}-${j}"></span></div></div></div>`;
+      return `<div class="r-row"><div class="r-top"><span class="r-opt"><b>${L}</b> ${o}</span><span class="r-cnt" id="c${q.id}-${j}">0</span></div><div class="r-bar-bg"><div class="r-bar" id="b${q.id}-${j}" style="width:0"><span class="pct" id="p${q.id}-${j}"></span></div></div></div>`;
     }).join("");
     return `<div class="q-block ${fw}"><div class="q-label">Q${q.id}</div><div class="q-text">${q.question}</div>${bars}</div>`;
   }).join("")}</div>`;
 }
 
 async function fetchAll(){
-  let grandTotal=0;
+  let pCount=0;
   try{
     for(const q of QUESTIONS){
       const res=await fetch(API_BASE+`/api/results/${q.id}`);
       const data=await res.json();
       const results=data.results||{};
       const total=data.total||0;
-      grandTotal+=total;
+      if(q.id===1)pCount=total;
       if(total>0&&!built)buildUI();
       if(!built)continue;
       let max=0;
@@ -98,10 +108,9 @@ async function fetchAll(){
         if(cntEl)cntEl.textContent=v;
       });
     }
-    document.getElementById("total-num").textContent=grandTotal;
+    document.getElementById("total-num").textContent=pCount;
   }catch(e){console.error(e)}
 }
-
 fetchAll();
 setInterval(fetchAll,2000);
 </script>
